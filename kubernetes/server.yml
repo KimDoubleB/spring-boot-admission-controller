@@ -1,0 +1,38 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: webhook
+  namespace: default
+spec:
+  selector:
+    app: webhook
+  ports:
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 8443
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webhook
+  labels:
+    app: webhook
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webhook
+  template:
+    metadata:
+      name: webhook
+      labels:
+        app: webhook
+    spec:
+      containers:
+        - name: webhook
+          image:
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8443
